@@ -1,0 +1,15 @@
+para iniciar un proyecto nuevo node solamente doy npm init --yes
+
+las carpetas las ubico al gusto
+se recomienda poner todo el codigo aparte de los archivos de configuracion 
+
+para crear el server uso la libreria express
+npm install express
+
+luego de instalar express puero hacer el import o require o poner el objeto en una constante
+con la cual se maneja el servidor
+
+para probrar que el proyecto esta funcionando se lanza el servidor
+node index.js
+
+en el navegador debe aparecer un get sin respuesta, el servidor esta corriendo y express funcionando

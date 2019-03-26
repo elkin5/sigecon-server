@@ -13,3 +13,30 @@ para probrar que el proyecto esta funcionando se lanza el servidor
 node index.js
 
 en el navegador debe aparecer un get sin respuesta, el servidor esta corriendo y express funcionando
+
+para identificar los cambios que ocurren en un .js se utiliza el modulo nodemmon
+esto evitar reiniciar el servidor cada vez que guardo un cambios
+
+nodemon sera usado como dependeca de desarrollo para eso al instalar 
+sera npm install nodemon -D
+nodemon funciona de la manera como si fuese node para levantar el servidor
+por lo tanto si deseas usarlo es ma comodo con un script
+configurando en el package.json de la siguiente manera en el tap scripts:
+"dev" : "nodemon src/index.js"
+para ejecutar dicho script solo es necesario
+node run dev
+de esta manera si realizo algun cambio en el servidor este se refresca inmediatamente
+
+Para el uso de las librerias se debe usar require en lugar de import ya que:
+En Node.js se crearon un sistema de módulos llamado CommonJS, este se usa con: const modulo = 
+require('modulo'); En ES2015/6 se agrego al lenguaje un sistema nativo de módulos usando la sintaxis de: 
+import modulo from 'modulo'; Aunque básicamente parece que hacen lo mismo, en realidad funcionan de forma 
+distinta a más bajo nivel.
+
+CommonJS cuando cargas un módulo te trae una copia del módulo para que lo puedas usar, mientras que ES2015 
+trae una referencia a ese módulo. Esto quiere decir que si tu módulo tiene una variable y exporta una función 
+que modifica esa variable, cualquier otra parte de tu aplicación que haga uso de dicha variable va a ver 
+reflejado el cambio, mientras que con CommonJS cada uno tendría su copia de la variable.
+
+En conclusion uno es una copia(require) el otro es una referencia(import)
+por lo tanto como requiere es propio de node entonces se debe usar requiere

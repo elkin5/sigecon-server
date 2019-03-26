@@ -1,0 +1,33 @@
+mediante 
+app.listen levanto el serivdor
+
+con app.set se puede poner una variable la cual es accesible desde cualquier parte de la aplicacion
+donde se ingresa un clave valor que podra ser accesiblecon el metodo .get que recibe una clave
+
+para usar el puerto de produccion podemos usar
+process.env.PORT si existe un puerto dado por el sistema operativo tomalo
+
+
+Para ver como insteractua el servidor con el navegador mediante la vista de las peticiones 
+en la terminal donde se esta ejecutando podemos utilizar la libreria morgan
+para esto hacemos un npm i morgan
+y se usa en nuestro servidor 
+con app.use
+.use permite ejecutar metodos en nuestro servidor
+Veremos informacion de la siguiente manera:
+GET / 404 7.811 ms - 139
+donde se encuentra el tipo de peticiones
+La respuesta
+El tiempo tomado para la respuesta
+y el peso de la respuesta
+
+nodemon permite verificar pero no cuando se hace instalacion de librerias
+por lo tanto debe detenerse cada vez que se requeire realizar una instalacion
+
+un middleware es basicamente un trazado que se va a ejecutar cada vez que se ejecute el servidor
+y mediante use sera para todas las peticiones
+
+
+Para tomar los datos del navegador y en formato json de manera que podamos manipularlos 
+y ver todo lo que tiene en la cabecera y en el body
+se usa express.json()

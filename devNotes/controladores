@@ -1,0 +1,34 @@
+Los controladores se usan para poner la logica de los metodos llamados en el api
+generalmente se nombran 
+name.controller.js
+
+para crear un controlador se declara una variable de tipo objeto para poder ser exportado
+
+de esta manera puedo agregarle a ese objeto multiples metodos
+las funciones se crean de modo middlewarw (req, res)
+
+cuando pongo () a una funcion la ejecuto, cuando no los pongo paso simplemente la funcion 
+
+los controladores tienen los metodos basicos para el acceso a las diferentes actividades
+
+mediante el uso del modelo creado podemos acceder a las consultas de las bases de datos
+las consulatas a la base de datos puede tardar algo la carga de los datos por lo que es 
+necesario estar pendiente de la respuesta, para esto es necesario un callback que basicamnte es 
+pasar una funcion que se ejecutara en el momento de obtener los datos,
+de otro lado existen las promesas que es una forma mas moderna de realizar la espera
+complementando el llamado con un then y un catch que se ejecutara segun sea necesario despues 
+de haberse finalizado la ejecucion del metodo.
+
+aunque javascript permite en sus nuevas versiones realizar llamados y esperar por los resultados
+de la siguiente manera la funcion principal o middleware se le antepondra la palabra async y para la 
+la funcion que tarda se le pondra la palabra await
+
+con esto le estamos diciendo que espere y traiga los datos cuando esten completos.
+
+en el middleware debo siempre retornar algo para res.json
+
+con la declaracion 
+const { id } = req.params
+
+le estoy diciendo tome el campo id dentro del json y guardelo dentro de una variable de ese mismo nombre
+

@@ -1,0 +1,7 @@
+Para los modelos tambien es posible usar moongose ya que permite definir cual sera 
+el esquema en la base de datos mongodb
+
+mediante la propiedad schema puedo definir un objeto json
+que contiene los campos que deseo tener en la base de datos
+
+luego se le avisa a mongodb por medio de moongose como se llamara la coleccion en la base de datos

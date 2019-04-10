@@ -1,0 +1,13 @@
+Debemos crear un archivo encargado de todas las rutas a las que vamos a acceder
+es bueno usar un nombre descriptivo junto al .routes.js para de esta manera identificar 
+a qu rutas hace referencia el archivo
+
+para la rutas se usa express y un objeto llamado router
+
+las rutas se van a utilizar para enviar y recibir datos como una res api
+
+para el servidor no es necesario la rutas por tanto nuestro modulo de rutas
+en realidad actuara como una api rest
+
+para indicar que se recibe un dato dentro de la ruta se usa:
+/:id  donde id es el valor que se recibe

@@ -24,10 +24,6 @@ userDao.getUsers = async (cb) => {
   const users = await User.find(cb);
 };
 
-userDao.signinUser = async (userSign, cb) => {
-  const user = await User.find({ "username": userSign.username, "password": userSign.password }, cb);
-};
-
 // userController.editUser = async (req, res) => {
 //   const user = {
 //     email: req.body.email,

@@ -1,0 +1,8 @@
+Access to XMLHttpRequest at 'http://localhost:3000/api/users' 
+from origin 'http://localhost:4200' has been blocked by CORS policy: 
+Response to preflight request doesn't pass access control check: 
+No 'Access-Control-Allow-Origin' header is present on the requested 
+
+Para esto uso 
+npm i cors
+

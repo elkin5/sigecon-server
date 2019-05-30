@@ -1,57 +1,81 @@
-const User = require('../models/user.model');
+const userDao = require('../dao/user.dao');
+
+// imports para la autentcacion con jwt
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const SECRET_KEY = 'elkinkey';
 
 const userController = {};
 
-userController.getUser = async (req, res) => {
-  const user = await User.findById(req.params.id);
-
-  res.json(user);
-};
-
-userController.getUsers = async (req, res) => {
-  const users = await User.find();
-
-  res.json(users);
-};
-
-userController.addUser = async (req, res) => {
-  const user = new User(req.body);
-
-  await user.save();
-
-  res.json({
-    status: 200,
-    response: 'User saved'
+//Obtener usuario por su username
+userController.getUserByUsername = (req, res) => {
+  userDao.getUserByUsername(req.params.username, (err, user) => {
+    res.json(user);
   });
 };
 
-userController.editUser = async (req, res) => {
-  const user = {
-    email: req.body.email,
-    name: req.body.name,
-    user: req.body.user,
-    password: req.body.password
-  };
-
-  const { id } = req.params;
-
-  // Busca y lo actualiza y si no esta no lo crea
-  await User.findByIdAndUpdate(id, { $set: user }, { new: false });
-
-  res.json({
-    status: 200,
-    response: 'User edited'
-  })
+//Obtener usuario por su email
+userController.getUserByEmail = (req, res) => {
+  userDao.getUserByEmail(req.params.email, (err, user) => {
+    res.json(user);
+  });
 };
 
-userController.deleteUser = async (req, res) => {
-  const { id } = req.params;
+userController.getUser = (req, res) => {
+  userDao.getUser(req.params.id, (err, user) => {
+    res.json(user);
+  });
+};
 
-  await User.findByIdAndRemove(id);
-  res.json({
-    status: 200,
-    response: 'User deleted'
-  })
+userController.getUsers = (req, res) => {
+  userDao.getUsers((err, users) => {
+    res.json(users);
+  });
+};
+
+userController.addUser = (req, res) => {
+  const user = req.body;
+  user.password = bcrypt.hashSync(user.password);
+
+  userDao.addUser(user, (err, user) => {
+    const expiresIn = 24 * 60 * 60;
+    const acessToken = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: expiresIn });
+
+    res.json({
+      status: 200,
+      response: 'User saved',
+      jwt: acessToken,
+      expiresIn: expiresIn
+    });
+  });
+};
+
+userController.signinUser = (req, res) => {
+  const userLogin = req.body;
+  console.log(userLogin);
+
+  userDao.getUserByUsername(userLogin.username, (err, user) => {
+    if (!user) {
+      res.status(409).send({ message: "Invalid User" });
+    }
+    else {
+      console.log(userLogin.password, user[0].password);
+      if (bcrypt.compareSync(userLogin.password, user[0].password)) {
+        const expiresIn = 24 * 60 * 60;
+        const acessToken = jwt.sign({ id: user[0]._id }, SECRET_KEY, { expiresIn: expiresIn });
+
+        res.json({
+          status: 200,
+          response: 'User logged',
+          jwt: acessToken,
+          expiresIn: expiresIn
+        });
+      }
+      else {
+        res.status(409).send({ message: "Invalid Password"});
+      }
+    }
+  });
 };
 
 module.exports = userController;

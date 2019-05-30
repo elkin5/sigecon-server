@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const conecctionURI = 'mongodb://localhost/sigecon_db';
+const conecctionURI = require('../config/properties').DB;
 
 mongoose.connect(conecctionURI, { useNewUrlParser: true })
   .then(db => console.log('DB is connect'))

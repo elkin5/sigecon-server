@@ -2,8 +2,9 @@ const User = require('../models/user.model');
 
 userDao = {};
 
-userDao.addUser = async (user, cb) => {  
-  const userSave = await user.save(cb);
+userDao.addUser = async (user, cb) => {
+  var userSave = new User(user);
+  await userSave.save(cb);
 };
 
 //Obtener usuario por su username

@@ -7,20 +7,6 @@ const SECRET_KEY = 'elkinkey';
 
 const userController = {};
 
-//Obtener usuario por su username
-userController.getUserByUsername = (req, res) => {
-  userDao.getUserByUsername(req.params.username, (err, user) => {
-    res.json(user);
-  });
-};
-
-//Obtener usuario por su email
-userController.getUserByEmail = (req, res) => {
-  userDao.getUserByEmail(req.params.email, (err, user) => {
-    res.json(user);
-  });
-};
-
 userController.getUser = (req, res) => {
   userDao.getUser(req.params.id, (err, user) => {
     res.json(user);
@@ -34,23 +20,61 @@ userController.getUsers = (req, res) => {
 };
 
 userController.addUser = (req, res) => {
-  const user = req.body;
-  user.password = bcrypt.hashSync(user.password);
 
-  userDao.addUser(user, (err, user) => {
-    const expiresIn = 24 * 60 * 60;
-    const acessToken = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: expiresIn });
+  const sendError = function (err) {
+    res.status(500).send({ message: err.message });
+  }
 
-    res.json({
-      status: 200,
-      response: 'User saved',
-      jwt: acessToken,
-      expiresIn: expiresIn
-    });
+  req.body.password = bcrypt.hashSync(req.body.password);
+  req.body.active = true;
+  
+  userDao.getUserByEmail(req.body.email, (err, user) => {
+    if (err) {
+      sendError(err);
+    }
+
+    if (user.length > 0){
+      res.status(409).send({ message: "Ya se encuentra una cuenta con este email" });
+    }
+    else {
+      userDao.getUserByUsername(req.body.username, (err, user) => {
+        if (err) {
+          sendError(err);
+        }
+
+        if (user.length > 0) {
+          res.status(409).send({ message: "Ya se encuentra una cuenta con este usuario" });
+        }
+        else {
+          user.active = true;
+          userDao.addUser(req.body, (err, user) => {
+            if (err) {
+              sendError(err.message);
+            }
+            else {
+              const expiresIn = 24 * 60 * 60;
+
+              const userData = {
+                name: user.name,
+                email: user.email,
+                jwtAccess: jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: expiresIn }),
+                expiresIn: expiresIn
+              }
+
+              res.json({
+                status: 200,
+                message: 'User saved',
+                user: userData
+              });
+            }            
+          });
+        }
+      });
+    }
   });
 };
 
-userController.signinUser = (req, res) => {
+userController.loginUser = (req, res) => {
   const userLogin = req.body;
   console.log(userLogin);
 
@@ -63,12 +87,18 @@ userController.signinUser = (req, res) => {
       if (bcrypt.compareSync(userLogin.password, user[0].password)) {
         const expiresIn = 24 * 60 * 60;
         const acessToken = jwt.sign({ id: user[0]._id }, SECRET_KEY, { expiresIn: expiresIn });
+        
+        const userData = {
+          name: user.name,
+          email: user.email,
+          jwtAccess: acessToken,
+          expiresIn: expiresIn
+        }
 
         res.json({
           status: 200,
-          response: 'User logged',
-          jwt: acessToken,
-          expiresIn: expiresIn
+          message: 'User logged',
+          user: userData
         });
       }
       else {

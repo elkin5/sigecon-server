@@ -27,13 +27,13 @@ userController.addUser = (req, res) => {
 
   req.body.password = bcrypt.hashSync(req.body.password);
   req.body.active = true;
-  
+
   userDao.getUserByEmail(req.body.email, (err, user) => {
     if (err) {
       sendError(err);
     }
 
-    if (user.length > 0){
+    if (user.length > 0) {
       res.status(409).send({ message: "Ya se encuentra una cuenta con este email" });
     }
     else {
@@ -66,7 +66,7 @@ userController.addUser = (req, res) => {
                 message: 'User saved',
                 user: userData
               });
-            }            
+            }
           });
         }
       });
@@ -79,7 +79,7 @@ userController.loginUser = (req, res) => {
   console.log(userLogin);
 
   userDao.getUserByUsername(userLogin.username, (err, user) => {
-    if (!user) {
+    if (user.length == 0) {
       res.status(409).send({ message: "Invalid User" });
     }
     else {
@@ -87,7 +87,7 @@ userController.loginUser = (req, res) => {
       if (bcrypt.compareSync(userLogin.password, user[0].password)) {
         const expiresIn = 24 * 60 * 60;
         const acessToken = jwt.sign({ id: user[0]._id }, SECRET_KEY, { expiresIn: expiresIn });
-        
+
         const userData = {
           name: user.name,
           email: user.email,
@@ -102,7 +102,7 @@ userController.loginUser = (req, res) => {
         });
       }
       else {
-        res.status(409).send({ message: "Invalid Password"});
+        res.status(409).send({ message: "Invalid Password" });
       }
     }
   });
